@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Plots do
+defmodule Mix.Tasks.Gnuplot.Readme do
   use Mix.Task
 
   alias Gnuplot, as: G
@@ -33,8 +33,27 @@ defmodule Mix.Tasks.Plots do
     )
   end
 
+  defp bumps do
+    plot_file(
+      "docs/bumps.PNG",
+      [
+        [:set, :view, :map],
+        [:set, :dgrid3d],
+        [:set,  :pm3d, :interpolate, G.list(2, 2)],
+        [:splot, "-", :with, :pm3d]
+      ],
+      [
+        for(x <- -500..500,
+            y <- -500..500, do: [x / 10.0,
+            y / 10.0,
+            (:math.sin(x * 5 / 10.0) * :math.cos(y * 5 / 10.0) / 5.0)])
+      ]
+    )
+  end
+
   @shortdoc "Generate plots of the README"
   def run(_) do
     rand()
+    bumps()
   end
 end
